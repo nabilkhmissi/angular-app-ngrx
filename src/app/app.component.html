@@ -1,0 +1,11 @@
+<app-header></app-header>
+<app-loading-spinner *ngIf="loading$ | async"></app-loading-spinner>
+<div class="container">
+    <div class="alert alert-danger p-4" *ngIf="errorMessage$ | async as errorMessage">
+        {{ errorMessage }}
+    </div>
+</div>
+
+<div class="container">
+    <router-outlet></router-outlet>
+</div>

@@ -1,0 +1,9 @@
+<div class="card shadow border-0 mb-3">
+  <div class="card-body">
+    <h3 class="card-title">{{ post.title }}</h3>
+    <p class="card-subtitle mb-2 text-body-secondary">{{ post.date | date : 'short' }}</p>
+    <p class="card-text">{{ post.description }}</p>
+    <a (click)="onEdit()" class="card-link">Edit</a>
+    <a (click)="onDelete()" class="card-link text-danger">Delete</a>
+  </div>
+</div>
