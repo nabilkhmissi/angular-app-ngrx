@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { tap } from 'rxjs';
+import { Subscription, tap } from 'rxjs';
 import { Post } from 'src/app/models/post.model';
 import { addPost, updatePost } from '../state/post.actions';
 import { getPostById } from '../state/post.selector';
@@ -15,7 +15,7 @@ import { PostState } from '../state/post.state';
 })
 export class AddPostComponent implements OnInit {
 
-  constructor(private store: Store<PostState>, private activeRouter: ActivatedRoute) { }
+  constructor(private store: Store<PostState>) { }
 
   title = new FormControl()
   description = new FormControl()
@@ -23,6 +23,7 @@ export class AddPostComponent implements OnInit {
   btn_text = "add";
   id!: string;
   post!: Post;
+  subscription!: Subscription
 
   ngOnInit(): void {
     this.formGroup = new FormGroup({
@@ -30,24 +31,19 @@ export class AddPostComponent implements OnInit {
       description: this.description,
     })
 
-    this.activeRouter.paramMap.pipe(
-      tap(params => {
-        let id = params.get('id')!
-        this.store.select(getPostById, { id: id }).pipe(
-          tap(post => {
-            if (post) {
-              this.btn_text = "Edit"
-              this.post = post!
-              this.formGroup.patchValue({
-                title: post!.title,
-                description: post!.description,
-              });
-            }
-          })
-        ).subscribe()
+    this.store.select(getPostById).subscribe(
+      post => {
+        if (post) {
+          this.btn_text = "Edit"
+          this.post = post!
+          this.formGroup.patchValue({
+            title: post!.title,
+            description: post!.description,
+          });
+        }
 
-      })
-    ).subscribe()
+      }
+    )
   }
 
   onSubmit() {
@@ -58,11 +54,7 @@ export class AddPostComponent implements OnInit {
     } else {
       post._id = this.post._id
       post.date = this.post.date
-      console.log(post)
       this.store.dispatch(updatePost({ post }))
     }
-
-
   }
-
 }

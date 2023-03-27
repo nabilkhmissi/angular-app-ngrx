@@ -14,6 +14,7 @@ import { AppReducer } from './store/state.app';
 import { AuthEffects } from './auth/state/auth.effects';
 import { JwtTokenInterceptor } from './interceptor/authToken.interceptor';
 import { StoreRouterConnectingModule } from '@ngrx/router-store';
+import { CustomSerializer } from './router/custom-serializer';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,7 @@ import { StoreRouterConnectingModule } from '@ngrx/router-store';
     StoreDevtoolsModule.instrument({
       logOnly: environment.production, // Restrict extension to log-only mode
     }),
-    StoreRouterConnectingModule.forRoot()
+    StoreRouterConnectingModule.forRoot({ serializer: CustomSerializer })
 
 
   ],
